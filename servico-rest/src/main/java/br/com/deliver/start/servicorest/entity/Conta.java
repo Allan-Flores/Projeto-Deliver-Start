@@ -4,8 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import static br.com.deliver.start.servicorest.config.Uteis.formatter;
 
 @Entity
 public class Conta {
@@ -14,6 +18,7 @@ public class Conta {
     @GeneratedValue
     private int id;
     @Column
+    @NotEmpty
     private String nome;
     @Column
     private double valorOriginal;
@@ -33,6 +38,15 @@ public class Conta {
         this.nome = nome;
         this.valorOriginal = valorOriginal;
         this.dVencimento = dVencimento;
+        this.dPagamento = null;
+        valorCorrigido = 0.0;
+        atraso = 0;
+    }
+
+    public Conta(String nome, double valorOriginal, String dVencimento) {
+        this.nome = nome;
+        this.valorOriginal = valorOriginal;
+        this.dVencimento = LocalDate.parse(dVencimento, formatter);
         this.dPagamento = null;
         valorCorrigido = 0.0;
         atraso = 0;
