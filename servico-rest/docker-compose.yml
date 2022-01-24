@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  db:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - C:\Users\Allan Flores\Documents\Bootcamp Deliver Start\dbdata:\data\db
+
+volumes:
+  servico_rest:

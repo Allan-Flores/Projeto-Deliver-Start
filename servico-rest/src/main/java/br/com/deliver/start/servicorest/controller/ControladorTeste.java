@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 
-//@RestController
+//@RestController Controller
 public class ControladorTeste {
 
 //    @Autowired

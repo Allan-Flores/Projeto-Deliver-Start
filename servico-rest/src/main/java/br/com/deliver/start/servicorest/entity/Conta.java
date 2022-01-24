@@ -1,11 +1,7 @@
 package br.com.deliver.start.servicorest.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -15,20 +11,17 @@ import static br.com.deliver.start.servicorest.config.Uteis.formatter;
 public class Conta {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column
     @NotEmpty
     private String nome;
-    @Column
+
     private double valorOriginal;
-    @Column
     private double valorCorrigido;
-    @Column
     private LocalDate dVencimento;
-    @Column
     private LocalDate dPagamento;
-    @Column
     private int atraso;
 
     public Conta() {

@@ -8,10 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
-
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -20,7 +17,7 @@ public class Controlador {
     @Autowired
     private ServicoUsuario servicoUser;
 
-    @RequestMapping
+    @GetMapping
     public ResponseEntity<Page<Conta>> programa(Pageable pageable) {
         servicoUser.criarContas();
         servicoUser.novaConta();
@@ -28,7 +25,7 @@ public class Controlador {
         return new ResponseEntity<>(servicoUser.listaTodos(pageable), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<Conta> procurarUmaConta(@PathVariable int id) {
         return new ResponseEntity<>(servicoUser.consultarConta(id), HttpStatus.OK);
     }
