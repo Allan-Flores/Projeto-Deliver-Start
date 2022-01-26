@@ -1,6 +1,7 @@
 package br.com.deliver.start.servicorest.controller;
 
 import br.com.deliver.start.servicorest.entity.Conta;
+import br.com.deliver.start.servicorest.entity.ContaReduzida;
 import br.com.deliver.start.servicorest.service.ServicoUsuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -22,16 +24,16 @@ public class Controlador {
         servicoUser.criarContas();
         servicoUser.novaConta();
         servicoUser.calculoJuros();
-        return new ResponseEntity<>(servicoUser.listaTodos(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(servicoUser.listaTodosP(pageable), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/{id}") //testado
     public ResponseEntity<Conta> procurarUmaConta(@PathVariable int id) {
         return new ResponseEntity<>(servicoUser.consultarConta(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Conta> salvarConta(@RequestBody @Valid Conta conta) {
+    public ResponseEntity<Conta> salvarConta(@RequestBody ContaReduzida conta) {
         return new ResponseEntity<>(servicoUser.salvarConta(conta), HttpStatus.CREATED);
     }
 
@@ -42,24 +44,25 @@ public class Controlador {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Conta conta) {
+    public ResponseEntity<Void> replace(@RequestBody ContaReduzida conta) {
         servicoUser.replace(conta);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping("/rest")
-    public String programa2() {
-        servicoUser.criarContas();
-        String mensagem = "Contas Criadas";
-        servicoUser.novaConta();
-        mensagem = "\nnova conta criada";
+    @RequestMapping("/juros")
+    public ResponseEntity<Page<Conta>> juros(Pageable pageable) {
         servicoUser.calculoJuros();
-        return "Tudo feito com sucesso";
+        return new ResponseEntity<>(servicoUser.listaTodosP(pageable), HttpStatus.OK);
     }
 
-    @RequestMapping("/print")
+    @RequestMapping("/print") //testado
     public ResponseEntity<Page<Conta>> print(Pageable pageable) {
-        return new ResponseEntity<>(servicoUser.listaTodos(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(servicoUser.listaTodosP(pageable), HttpStatus.OK);
+    }
+
+    @RequestMapping("/printNotPageable") //testado
+    public ResponseEntity<List<Conta>> print() {
+        return new ResponseEntity<>(servicoUser.listaTodosL(), HttpStatus.OK);
     }
 
     @RequestMapping("/erro")

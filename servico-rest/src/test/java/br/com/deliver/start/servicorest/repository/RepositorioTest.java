@@ -1,12 +1,16 @@
+//convenção para assinatura de metodos test: nomeDoMetodoTestado_OQueEleDeveFazer_Retorno
+//teste esperando uma excecão; seguir a sequencia de videos
 package br.com.deliver.start.servicorest.repository;
 
 import br.com.deliver.start.servicorest.entity.Conta;
+import br.com.deliver.start.servicorest.exception.ExcecaoSolicitacaoIncorreta;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -19,7 +23,7 @@ class RepositorioTest {
 
     @Test
     @DisplayName("Criando uma Conta e salva uma conta")
-    void salvar_conta_quando_sucesso(){
+    void save_salvarConta_quandoSucesso(){
         Conta conta = criarConta();
         Conta contaSalva = this.repositorio.save(conta);
 
@@ -30,7 +34,7 @@ class RepositorioTest {
 
     @Test
     @DisplayName("Atualizando uma Conta e salva uma conta")
-    void atualizar_conta_quando_sucesso(){
+    void atualizar_conta_quandoSucesso(){
         Conta conta = criarConta();
         Conta contaSalva = this.repositorio.save(conta);
 
@@ -44,7 +48,7 @@ class RepositorioTest {
 
     @Test
     @DisplayName("Delete uma Conta e salva uma conta")
-    void Delete_conta_quando_sucesso(){
+    void Delete_conta_quandoSucesso(){
         Conta conta = criarConta();
         Conta contaSalva = this.repositorio.save(conta);
 
@@ -55,8 +59,25 @@ class RepositorioTest {
         Assertions.assertThat(contaOptional).isEmpty();
     }
 
+    @Test
+    @DisplayName("Quando a conta procurada existe")
+    void findById_ProcurarConta_QuandoSucesso() {
+        Conta conta = criarConta();
+        Conta contaSalva = this.repositorio.save(conta);
+
+        Optional<Conta> contaProcurada = repositorio.findById(conta.getId());
+
+        Assertions.assertThat(contaProcurada.get().getId()).isEqualTo(conta.getId());
+    }
+
+    @Test
+    @DisplayName("Excecão quando a conta procurada não existe")
+    void findById_ProcurarConta_QuandoFalha() {
+        Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
+                .isThrownBy( () -> this.repositorio.save(new Conta()));
+    }
+
     private Conta criarConta(){
         return new Conta("Alana", 500, LocalDate.of(2022, 1, 22));
     }
-
 }

@@ -1,11 +1,13 @@
 package br.com.deliver.start.servicorest.entity;
 
+import lombok.Builder;
+import lombok.Data;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static br.com.deliver.start.servicorest.config.Uteis.formatter;
 
 @Entity
 public class Conta {
@@ -36,10 +38,20 @@ public class Conta {
         atraso = 0;
     }
 
-    public Conta(String nome, double valorOriginal, String dVencimento) {
-        this.nome = nome;
-        this.valorOriginal = valorOriginal;
-        this.dVencimento = LocalDate.parse(dVencimento, formatter);
+//    public Conta(String nome, double valorOriginal, String dVencimento) {
+//        this.nome = nome;
+//        this.valorOriginal = valorOriginal;
+//        this.dVencimento = LocalDate.parse(dVencimento, formatter);
+//        this.dPagamento = null;
+//        valorCorrigido = 0.0;
+//        atraso = 0;
+//    }
+
+    public Conta(ContaReduzida contaReduzida) {
+        if(contaReduzida.getId() != 0) this.id = contaReduzida.getId();
+        this.nome = contaReduzida.getNome();
+        this.valorOriginal = contaReduzida.getValorOriginal();
+        this.dVencimento = contaReduzida.getDVencimento();
         this.dPagamento = null;
         valorCorrigido = 0.0;
         atraso = 0;

@@ -1,13 +1,16 @@
 package br.com.deliver.start.servicorest.service;
 
 import br.com.deliver.start.servicorest.entity.Conta;
+import br.com.deliver.start.servicorest.entity.ContaReduzida;
+import br.com.deliver.start.servicorest.exception.ExcecaoSolicitacaoIncorreta;
 import br.com.deliver.start.servicorest.repository.Repositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +38,22 @@ public class ServicoUsuario {
         repositorio.save(conta);
     }
 
+    //Inclui conta reduzida vinda do Postman
+    @Transactional
+    public Conta salvarConta(ContaReduzida contaReduzida) {
+        return repositorio.save(new Conta(contaReduzida));
+    }
+
     //Inclui conta vinda do Postman
     public Conta salvarConta(Conta conta) {
-        repositorio.save(conta);
-        return conta;
+        return repositorio.save(conta);
     }
 
     //Substitui a informação atual por uma nova
-    public void replace(Conta conta) {
-        deleta(conta.getId());
+    public void replace(ContaReduzida contaReduzida) {
+        Conta contaSalva = consultarConta(contaReduzida.getId());
+        Conta conta = new Conta(contaReduzida);
+        conta.setId(contaSalva.getId());
         repositorio.save(conta);
     }
 
@@ -73,17 +83,22 @@ public class ServicoUsuario {
                         + conta.getValorOriginal());
             }
         }
+        repositorio.saveAll(contas);
     }
 
-    //Listagem das contas cadastradas
-    public Page<Conta> listaTodos(Pageable pageable) {
+    //Listagem das contas cadastradas em pagina
+    public Page<Conta> listaTodosP(Pageable pageable) {
         return repositorio.findAll(pageable);
+    }
+
+    //Listagem das contas cadastradas em lista
+    public List<Conta> listaTodosL() {
+        return repositorio.findAll();
     }
 
     //Consulta uma conta
     public Conta consultarConta(int id){
-        return repositorio.findById(id).get();
+        return repositorio.findById(id)
+        .orElseThrow(() -> new ExcecaoSolicitacaoIncorreta("Conta não encontrada"));
     }
-
-
 }
