@@ -73,8 +73,8 @@ class RepositorioTest {
     @Test
     @DisplayName("Excecão quando a conta procurada não existe")
     void findById_ProcurarConta_QuandoFalha() {
-        Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
-                .isThrownBy( () -> this.repositorio.save(new Conta()));
+      Assertions.assertThatCode(() -> repositorio.findById(100))
+                .doesNotThrowAnyException();
     }
 
     private Conta criarConta(){

@@ -19,56 +19,53 @@ public class Controlador {
     @Autowired
     private ServicoUsuario servicoUser;
 
-    @GetMapping
+    @RequestMapping//GetMapping
     public ResponseEntity<Page<Conta>> programa(Pageable pageable) {
-        servicoUser.criarContas();
         servicoUser.novaConta();
         servicoUser.calculoJuros();
         return new ResponseEntity<>(servicoUser.listaTodosP(pageable), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}") //testado
+    @GetMapping(path = "/{id}") //t
     public ResponseEntity<Conta> procurarUmaConta(@PathVariable int id) {
         return new ResponseEntity<>(servicoUser.consultarConta(id), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping //t
     public ResponseEntity<Conta> salvarConta(@RequestBody ContaReduzida conta) {
         return new ResponseEntity<>(servicoUser.salvarConta(conta), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/{id}") //t
     public ResponseEntity<Void> deleta(@PathVariable int id) {
         servicoUser.deleta(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping
+    @PutMapping //t
     public ResponseEntity<Void> replace(@RequestBody ContaReduzida conta) {
         servicoUser.replace(conta);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping("/juros")
+    @RequestMapping("/juros") //t
     public ResponseEntity<Page<Conta>> juros(Pageable pageable) {
         servicoUser.calculoJuros();
         return new ResponseEntity<>(servicoUser.listaTodosP(pageable), HttpStatus.OK);
     }
 
-    @RequestMapping("/print") //testado
+    @RequestMapping("/print") //t
     public ResponseEntity<Page<Conta>> print(Pageable pageable) {
         return new ResponseEntity<>(servicoUser.listaTodosP(pageable), HttpStatus.OK);
     }
 
-    @RequestMapping("/printNotPageable") //testado
+    @RequestMapping("/printNotPageable") //t
     public ResponseEntity<List<Conta>> print() {
         return new ResponseEntity<>(servicoUser.listaTodosL(), HttpStatus.OK);
     }
 
-    @RequestMapping("/erro")
+    @RequestMapping("/erro") //t
     public String erro() {
         return "Algo deu errado";
     }
-
-
 }

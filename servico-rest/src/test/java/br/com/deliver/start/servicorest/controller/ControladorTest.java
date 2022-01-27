@@ -1,6 +1,7 @@
 package br.com.deliver.start.servicorest.controller;
 
 import br.com.deliver.start.servicorest.entity.Conta;
+import br.com.deliver.start.servicorest.entity.ContaReduzida;
 import br.com.deliver.start.servicorest.service.ServicoUsuario;
 import br.com.deliver.start.servicorest.util.CriadorConta;
 import org.assertj.core.api.Assertions;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -30,9 +32,23 @@ class ControladorTest {
     void setUp() {
         PageImpl<Conta> contaPage = new PageImpl<>(List.of(CriadorConta.criarContaComId()));
 
-        BDDMockito.when(servicoUsuarioMock.listaTodosP(ArgumentMatchers.any())).thenReturn(contaPage);
-        BDDMockito.when(servicoUsuarioMock.listaTodosL()).thenReturn(List.of(CriadorConta.criarContaComId()));
-        BDDMockito.when(servicoUsuarioMock.consultarConta(ArgumentMatchers.anyInt())).thenReturn(CriadorConta.criarContaComId());
+        BDDMockito.when(servicoUsuarioMock.listaTodosP(ArgumentMatchers.any()))
+                .thenReturn(contaPage);
+
+        BDDMockito.when(servicoUsuarioMock.listaTodosL())
+                .thenReturn(List.of(CriadorConta.criarContaComId()));
+
+        BDDMockito.when(servicoUsuarioMock.consultarConta(ArgumentMatchers.anyInt()))
+                .thenReturn(CriadorConta.criarContaComId());
+
+        BDDMockito.when(servicoUsuarioMock.salvarConta(ArgumentMatchers.any(ContaReduzida.class)))
+                .thenReturn(CriadorConta.criarContaComId());
+
+        BDDMockito.doNothing().when(servicoUsuarioMock).replace(ArgumentMatchers.any(ContaReduzida.class));
+
+        BDDMockito.doNothing().when(servicoUsuarioMock).deleta(ArgumentMatchers.anyInt());
+
+        BDDMockito.doNothing().when(servicoUsuarioMock).calculoJuros();
     }
 
     @Test
@@ -71,5 +87,56 @@ class ControladorTest {
         Assertions.assertThat(rEConta.getBody()).isNotNull();
         Assertions.assertThat(rEConta.getBody().getNome()).isEqualTo(contaEsperada.getNome());
         Assertions.assertThat(rEConta.getBody().getId()).isEqualTo(contaEsperada.getId());
+    }
+
+    @Test
+    @DisplayName("MSalvarConta; Retorna uma conta")
+    void salvarConta_SucessoRetornoUmaConta() {
+        Conta contaEsperada = CriadorConta.criarContaComId();
+        ResponseEntity<Conta> rEConta = controlador.salvarConta(CriadorConta.criarContaReduz());
+
+        Assertions.assertThat(rEConta).isNotNull();
+        Assertions.assertThat(rEConta.getBody()).isNotNull();
+
+
+        Assertions.assertThat(rEConta.getBody()).isNotNull();
+        Assertions.assertThat(rEConta.getBody().getNome()).isEqualTo(contaEsperada.getNome());
+        Assertions.assertThat(rEConta.getBody().getId()).isEqualTo(contaEsperada.getId());
+    }
+
+    @Test
+    @DisplayName("MReplace; Atualiza uma conta")
+    void replace_SucessoAtualizaConta() {
+        Assertions.assertThatCode(() -> controlador.replace(CriadorConta.criarContaReduz()))
+                .doesNotThrowAnyException();
+
+        ResponseEntity<Void> rEConta = controlador.replace(CriadorConta.criarContaReduz());
+        Assertions.assertThat(rEConta).isNotNull();
+        Assertions.assertThat(rEConta.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("MDeleta; deleta uma conta")
+    void deleta_SucessoDeletaConta() {
+        Assertions.assertThatCode(() -> controlador.deleta(1))
+                .doesNotThrowAnyException();
+
+        ResponseEntity<Void> rEConta = controlador.deleta(1);
+        Assertions.assertThat(rEConta).isNotNull();
+        Assertions.assertThat(rEConta.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("MCalculoJuros; Atualiza VCorrigido")
+    void calculoJuros_SucessoAtualizaVCorrigido() {
+        Assertions.assertThatCode(() -> controlador.juros(null))
+                .doesNotThrowAnyException();
+
+        ResponseEntity<Page<Conta>> rEConta = controlador.juros(null);
+        Assertions.assertThat(rEConta).isNotNull();
+        Assertions.assertThat(rEConta.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        Conta conta = rEConta.getBody().toList().get(0);
+        Assertions.assertThat(conta).isNotNull();
     }
 }

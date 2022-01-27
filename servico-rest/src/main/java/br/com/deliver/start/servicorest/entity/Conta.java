@@ -8,12 +8,12 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
+@Data
 @Entity
 public class Conta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue//(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -38,15 +38,6 @@ public class Conta {
         atraso = 0;
     }
 
-//    public Conta(String nome, double valorOriginal, String dVencimento) {
-//        this.nome = nome;
-//        this.valorOriginal = valorOriginal;
-//        this.dVencimento = LocalDate.parse(dVencimento, formatter);
-//        this.dPagamento = null;
-//        valorCorrigido = 0.0;
-//        atraso = 0;
-//    }
-
     public Conta(ContaReduzida contaReduzida) {
         if(contaReduzida.getId() != 0) this.id = contaReduzida.getId();
         this.nome = contaReduzida.getNome();
@@ -55,62 +46,6 @@ public class Conta {
         this.dPagamento = null;
         valorCorrigido = 0.0;
         atraso = 0;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public double getValorOriginal() {
-        return valorOriginal;
-    }
-
-    public void setValorOriginal(Double valorOriginal) {
-        this.valorOriginal = valorOriginal;
-    }
-
-    public double getValorCorrigido() {
-        return valorCorrigido;
-    }
-
-    public void setValorCorrigido(double valorCorrigido) {
-        this.valorCorrigido = valorCorrigido;
-    }
-
-    public LocalDate getdVencimento() {
-        return dVencimento;
-    }
-
-    public void setdVencimento(LocalDate dVencimento) {
-        this.dVencimento = dVencimento;
-    }
-
-    public LocalDate getdPagamento() {
-        return dPagamento;
-    }
-
-    public void setdPagamento(LocalDate dPagamento) {
-        this.dPagamento = dPagamento;
-    }
-
-    public int getAtraso() {
-        return atraso;
-    }
-
-    public void setAtraso(int atraso) {
-        this.atraso = atraso;
     }
 
     @Override
