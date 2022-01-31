@@ -26,7 +26,7 @@ public class ServicoUsuario {
     }
 
     //Inclusão de conta a pagar
-    public void novaConta(){
+    public void novaConta(){ //////////////////////
         Conta conta = new Conta("Allan", 100,  LocalDate.of(2022, 1,11));
         repositorio.save(conta);
     }
@@ -34,7 +34,10 @@ public class ServicoUsuario {
     //Inclui conta reduzida vinda do Postman
     @Transactional
     public Conta salvarConta(ContaReduzida contaReduzida) {
-        return repositorio.save(new Conta(contaReduzida));
+        List<Conta> print = repositorio.findAll();
+        Conta save = repositorio.save(new Conta(contaReduzida));
+        print = repositorio.findAll();
+        return save;
     }
 
     //Substitui a informação atual por uma nova

@@ -7,11 +7,20 @@ server:
 
 
 spring:
+  application:
+    name: service-rest
   datasource:
-    url: jdbc:mysql://localhost:3306/conta?useSSL=false&createDatabaseIfNotExist=true&allowPublickeyRetrieval=true
+    #url: jdbc:mysql://localhost:3306/conta?useSSL=false&createDatabaseIfNotExist=true&allowPublickeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/conta?createDatabaseIfNotExist=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
+
+management:
+   endpoints:
+     web:
+       exposure:
+         include: health, metrics, prometheus

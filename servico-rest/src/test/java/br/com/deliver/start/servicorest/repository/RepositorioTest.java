@@ -4,6 +4,7 @@ package br.com.deliver.start.servicorest.repository;
 
 import br.com.deliver.start.servicorest.entity.Conta;
 import br.com.deliver.start.servicorest.exception.ExcecaoSolicitacaoIncorreta;
+import br.com.deliver.start.servicorest.util.CriadorConta;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,9 +66,9 @@ class RepositorioTest {
         Conta conta = criarConta();
         Conta contaSalva = this.repositorio.save(conta);
 
-        Optional<Conta> contaProcurada = repositorio.findById(conta.getId());
+        Optional<Conta> contaProcurada = repositorio.findById(contaSalva.getId());
 
-        Assertions.assertThat(contaProcurada.get().getId()).isEqualTo(conta.getId());
+        Assertions.assertThat(contaProcurada.get().getId()).isEqualTo(contaSalva.getId());
     }
 
     @Test
@@ -78,6 +79,6 @@ class RepositorioTest {
     }
 
     private Conta criarConta(){
-        return new Conta("Alana", 500, LocalDate.of(2022, 1, 22));
+        return CriadorConta.criarContaComId();
     }
 }
