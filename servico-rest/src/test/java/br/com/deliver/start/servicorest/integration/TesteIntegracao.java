@@ -3,8 +3,8 @@ package br.com.deliver.start.servicorest.integration;
 import br.com.deliver.start.servicorest.config.PageableResponse;
 import br.com.deliver.start.servicorest.entity.Conta;
 import br.com.deliver.start.servicorest.entity.UsuarioSistema;
-import br.com.deliver.start.servicorest.repository.Repositorio;
-import br.com.deliver.start.servicorest.repository.RepositorioUsuarioSistema;
+import br.com.deliver.start.servicorest.repository.RepositorioConta;
+import br.com.deliver.start.servicorest.repository.RepositorioUsuario;
 import br.com.deliver.start.servicorest.util.CriadorConta;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -40,9 +40,9 @@ public class TesteIntegracao {
     @Qualifier("testRestTemplateRegrasAdmin")
     private TestRestTemplate testRestTemplateRegraAdmin;
     @Autowired
-    private Repositorio repositorio;
+    private RepositorioConta repositorioConta;
     @Autowired
-    private RepositorioUsuarioSistema repositorioUsuarioSistema;
+    private RepositorioUsuario repositorioUsuario;
 
     private static final UsuarioSistema USER = UsuarioSistema.builder()
             .name("flores teste")
@@ -78,8 +78,8 @@ public class TesteIntegracao {
     @Test
     @DisplayName("Metodo Print; Retorna uma lista de conta em uma pagina")
     void print_SucessoRetornoPaginaComListaConta() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
-        repositorioUsuarioSistema.save(USER);
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
+        repositorioUsuario.save(USER);
 
         String nomeEsperado = contaSalva.getNome();
 
@@ -100,9 +100,9 @@ public class TesteIntegracao {
     @Test
     @DisplayName("Metodo Print; Retorna uma lista de conta")
     void print_SucessoRetornoListaConta() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
         String nomeEsperado = contaSalva.getNome();
-        repositorioUsuarioSistema.save(USER);
+        repositorioUsuario.save(USER);
 
         List<Conta> contaList= testRestTemplateRegraUsuario.exchange(
                 "/printNotPageable",
@@ -121,8 +121,8 @@ public class TesteIntegracao {
     @Test
     @DisplayName("Metodo procurarUmaConta; Retorna uma conta")
     void procurarUmaConta_SucessoRetornoUmaConta() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
-        repositorioUsuarioSistema.save(USER);
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
+        repositorioUsuario.save(USER);
 
         Conta conta = testRestTemplateRegraUsuario.getForObject("/{id}", Conta.class, contaSalva.getId());
 
@@ -136,7 +136,7 @@ public class TesteIntegracao {
     void salvarConta_SucessoRetornoUmaConta() {
         Conta contaCriada = CriadorConta.criarContaComId();
 
-        repositorioUsuarioSistema.save(ADMIN);
+        repositorioUsuario.save(ADMIN);
 
         ResponseEntity<Conta> rEConta = testRestTemplateRegraAdmin.postForEntity("/", contaCriada, Conta.class);
 
@@ -150,9 +150,9 @@ public class TesteIntegracao {
     @Test
     @DisplayName("MReplace; Atualiza uma conta")
     void replace_SucessoAtualizaConta() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
         contaSalva.setNome("Vando");
-        repositorioUsuarioSistema.save(USER);
+        repositorioUsuario.save(USER);
 
         ResponseEntity<Conta> rEConta = testRestTemplateRegraUsuario.exchange(
                 "/",
@@ -166,8 +166,8 @@ public class TesteIntegracao {
     @Test
     @DisplayName("MDeleta; deleta uma conta")
     void deleta_SucDeletaConta_RetContaDeletada() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
-        repositorioUsuarioSistema.save(ADMIN);
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
+        repositorioUsuario.save(ADMIN);
 
         ResponseEntity<Void> rEConta = testRestTemplateRegraAdmin.exchange(
                 "/{id}",
@@ -182,8 +182,8 @@ public class TesteIntegracao {
     @Test
     @DisplayName("MDeleta; retorna 403 quando o usuario não for admin")
     void deleta_SucExcessoNegado_RetExcecao304() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
-        repositorioUsuarioSistema.save(USER);
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
+        repositorioUsuario.save(USER);
 
         ResponseEntity<Void> rEConta = testRestTemplateRegraUsuario.exchange(
                 "/{id}",
@@ -198,8 +198,8 @@ public class TesteIntegracao {
     @Test
     @DisplayName("MCalculoJuros; Atualiza VCorrigido")
     void calculoJuros_SucessoAtualizaVCorrigido() {
-        Conta contaSalva = repositorio.save(CriadorConta.criarContaComId());
-        repositorioUsuarioSistema.save(USER);
+        Conta contaSalva = repositorioConta.save(CriadorConta.criarContaComId());
+        repositorioUsuario.save(USER);
 
         PageableResponse<Conta> contaPage = testRestTemplateRegraUsuario.exchange(
                         "/juros",
@@ -220,7 +220,7 @@ public class TesteIntegracao {
     @Test
     @DisplayName("MErro; Retorna uma mensagem de erro")
     void erro_SucessoRetornoMsg() {
-        repositorioUsuarioSistema.save(USER);
+        repositorioUsuario.save(USER);
 
         String msg = testRestTemplateRegraUsuario.exchange(
                         "/erro",
@@ -238,7 +238,7 @@ public class TesteIntegracao {
     @Test
     @DisplayName("MPrograma; Retorna pagina de contas - rotina do sistema")
     void procurarUmaConta_SucExecutaRotinaSistema_RetPaginaConta() {
-        repositorioUsuarioSistema.save(USER);
+        repositorioUsuario.save(USER);
         
         PageableResponse<Conta> contaPage= testRestTemplateRegraUsuario.exchange(
                         "/",

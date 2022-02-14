@@ -1,6 +1,6 @@
 package br.com.deliver.start.servicorest.service;
 
-import br.com.deliver.start.servicorest.repository.RepositorioUsuarioSistema;
+import br.com.deliver.start.servicorest.repository.RepositorioUsuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,11 +12,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ServicoUsuarioSistema implements UserDetailsService {
-    private final RepositorioUsuarioSistema repositorioUsuarioSistema;
+    private final RepositorioUsuario repositorioUsuario;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        return Optional.ofNullable(repositorioUsuarioSistema.findByUsername(username))
+        return Optional.ofNullable(repositorioUsuario.findByUsername(username))
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario do sistema não encontrado"));
     }
 }

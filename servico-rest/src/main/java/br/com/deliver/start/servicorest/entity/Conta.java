@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 @Data
 @Entity
 public class Conta {
-
     @Id
     @GeneratedValue//(strategy = GenerationType.IDENTITY)
     private int id;
@@ -26,8 +25,7 @@ public class Conta {
     private LocalDate dPagamento;
     private int atraso;
 
-    public Conta() {
-    }
+    public Conta() {}
 
     public Conta(String nome, double valorOriginal, LocalDate dVencimento) {
         this.nome = nome;

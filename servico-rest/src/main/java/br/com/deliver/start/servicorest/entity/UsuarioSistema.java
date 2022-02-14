@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Builder
 @Entity
 public class UsuarioSistema implements UserDetails {
+
     @Id
     @GeneratedValue//(strategy = GenerationType.IDENTITY)
     private int id;

@@ -2,7 +2,7 @@ package br.com.deliver.start.servicorest.controller;
 
 import br.com.deliver.start.servicorest.entity.Conta;
 import br.com.deliver.start.servicorest.entity.ContaReduzida;
-import br.com.deliver.start.servicorest.service.ServicoUsuario;
+import br.com.deliver.start.servicorest.service.ServicoConta;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,7 +22,7 @@ import java.util.List;
 public class Controlador {
 
     @Autowired
-    private ServicoUsuario servicoUser;
+    private ServicoConta servicoUser;
 
     @GetMapping(path = "/rotina")
     @Operation(summary = "Executa rotina do sistema", description = "Rotina: cria-se uma nova conta e executa a rotina /juros")

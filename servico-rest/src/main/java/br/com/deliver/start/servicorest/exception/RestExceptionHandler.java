@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class RestExceptionHandler {
+
     @ExceptionHandler(ExcecaoSolicitacaoIncorreta.class)
     public ResponseEntity<DetalhesExcecaoSolicitacaoIncorreta> handlerExcecaoSolicitacaoIncorreta(ExcecaoSolicitacaoIncorreta esi){
         return new ResponseEntity<>(

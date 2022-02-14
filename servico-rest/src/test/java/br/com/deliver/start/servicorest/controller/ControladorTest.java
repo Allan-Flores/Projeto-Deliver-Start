@@ -2,7 +2,7 @@ package br.com.deliver.start.servicorest.controller;
 
 import br.com.deliver.start.servicorest.entity.Conta;
 import br.com.deliver.start.servicorest.entity.ContaReduzida;
-import br.com.deliver.start.servicorest.service.ServicoUsuario;
+import br.com.deliver.start.servicorest.service.ServicoConta;
 import br.com.deliver.start.servicorest.util.CriadorConta;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,29 +26,29 @@ class ControladorTest {
 
     //Uso nas clesses que auxilian o funcionamnto da classe testada
     @Mock
-    private ServicoUsuario servicoUsuarioMock;
+    private ServicoConta servicoContaMock;
 
     @BeforeEach
     void setUp() {
         PageImpl<Conta> contaPage = new PageImpl<>(List.of(CriadorConta.criarContaComId()));
 
-        BDDMockito.when(servicoUsuarioMock.listaTodosP(ArgumentMatchers.any()))
+        BDDMockito.when(servicoContaMock.listaTodosP(ArgumentMatchers.any()))
                 .thenReturn(contaPage);
 
-        BDDMockito.when(servicoUsuarioMock.listaTodosL())
+        BDDMockito.when(servicoContaMock.listaTodosL())
                 .thenReturn(List.of(CriadorConta.criarContaComId()));
 
-        BDDMockito.when(servicoUsuarioMock.consultarConta(ArgumentMatchers.anyInt()))
+        BDDMockito.when(servicoContaMock.consultarConta(ArgumentMatchers.anyInt()))
                 .thenReturn(CriadorConta.criarContaComId());
 
-        BDDMockito.when(servicoUsuarioMock.salvarConta(ArgumentMatchers.any(ContaReduzida.class)))
+        BDDMockito.when(servicoContaMock.salvarConta(ArgumentMatchers.any(ContaReduzida.class)))
                 .thenReturn(CriadorConta.criarContaComId());
 
-        BDDMockito.doNothing().when(servicoUsuarioMock).replace(ArgumentMatchers.any(ContaReduzida.class));
+        BDDMockito.doNothing().when(servicoContaMock).replace(ArgumentMatchers.any(ContaReduzida.class));
 
-        BDDMockito.doNothing().when(servicoUsuarioMock).deleta(ArgumentMatchers.anyInt());
+        BDDMockito.doNothing().when(servicoContaMock).deleta(ArgumentMatchers.anyInt());
 
-        BDDMockito.doNothing().when(servicoUsuarioMock).calculoJuros();
+        BDDMockito.doNothing().when(servicoContaMock).calculoJuros();
     }
 
     @Test

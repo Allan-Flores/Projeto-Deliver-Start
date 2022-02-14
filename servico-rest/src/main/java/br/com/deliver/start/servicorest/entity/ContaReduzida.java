@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class ContaReduzida {
+
     private int id;
     @Schema(description = "Esse é o nome do titular da conta")
     private String nome;
@@ -17,5 +18,4 @@ public class ContaReduzida {
     private double valorOriginal;
     @Schema(description = "Data de vencimento do boleto")
     private LocalDate dVencimento;
-
 }

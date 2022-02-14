@@ -17,8 +17,8 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @Log4j2
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
-public class securityConfing extends WebSecurityConfigurerAdapter {
-    private final ServicoUsuarioSistema servicoUsuarioSistema;
+public class securityConfing extends WebSecurityConfigurerAdapter {//
+    private final ServicoUsuarioSistema servicoUsuarioSistema;//
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -33,11 +33,11 @@ public class securityConfing extends WebSecurityConfigurerAdapter {
                 .and().httpBasic();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        log.info("Password encoded {}", passwordEncoder.encode("test"));
-        //Usuarios na memória
+    @Override//
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {//
+        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();//
+        log.info("Password encoded {}", passwordEncoder.encode("test"));//
+        //Usuarios na memória//
         auth.inMemoryAuthentication()
                 .withUser("allan2")
                 .password(passwordEncoder.encode("test"))

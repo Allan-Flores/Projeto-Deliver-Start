@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 @Getter
 @Setter
 public class PageableResponse<T> extends PageImpl<T> {
+
     private boolean first;
     private boolean last;
     private int totalPages;
